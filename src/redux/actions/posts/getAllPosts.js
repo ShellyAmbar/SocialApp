@@ -10,7 +10,7 @@ export default GetAllPosts = data => {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: "Bearer" + token
+        Authorization: "Bearer " + token
       }
     })
       .then(response => {

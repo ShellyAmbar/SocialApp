@@ -11,7 +11,7 @@ export default GetFollowersByUserId = () => {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: "Bearer" + token
+        Authorization: "Bearer " + token
       }
     })
       .then(response => {

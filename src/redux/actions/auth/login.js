@@ -12,9 +12,7 @@ export default Login = (email, password) => {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NzE2OTIzNTl9.RizTUP393vTf3Vr907lu0UygEQnqJI49RNwKGTjcpdU"
+        Authorization: "Bearer " + token
       },
       body: JSON.stringify({
         email: email,

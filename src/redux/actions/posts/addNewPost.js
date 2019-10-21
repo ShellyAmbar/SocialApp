@@ -11,7 +11,7 @@ export default AddNewPost = (title, image_url) => {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer" + token
+        Authorization: "Bearer " + token
       },
       body: JSON.stringify({
         title: title,
