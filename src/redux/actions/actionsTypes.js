@@ -1,0 +1,20 @@
+export default {
+  login: "AUTH_LOGIN",
+  register: "AUTH_REGISTER",
+  login_error: "LOGIN_ERROR",
+  register_error: "REGISTER_ERROR",
+  add_follower: "ADD_FOLLOWER",
+  add_follower_error: "ADD_FOLLOWER_ERROR",
+  get_followers_by_id: "FOLLOWERS_BY_ID",
+  get_followers_by_id_error: "FOLLOWERS_BY_ID_ERROR",
+  get_my_followers: "MY_FOLLOWERS",
+  get_my_followers_error: "MY_FOLLOWERS_ERROR",
+  add_post: "ADD_POST",
+  delete_post: "DELETE_POST",
+  get_posts_by_user_id: "GET_POSTS_USER_ID",
+  get_all_posts: "GET_ALL_POSTS",
+  add_post_error: "ADD_POST_ERROR",
+  delete_post_error: "DELETE_POST_ERROR",
+  get_posts_by_user_id_error: "GET_POSTS_USER_ID_ERROR",
+  get_all_posts_error: "GET_ALL_POSTS_ERROR"
+};
