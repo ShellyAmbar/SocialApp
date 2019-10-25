@@ -5,12 +5,34 @@ import { Header, Left, Right, Icon } from "native-base";
 import { Avatar } from "react-native-elements";
 import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
+import { BackHandler } from "react-native";
 
 class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.openCamera = this.openCamera.bind(this);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
+
+  componentWillMount() {
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
+
+  handleBackButtonClick() {
+    this.props.navigation.navigate("Login");
+    return true;
+  }
+
   //get and set permissions to camera
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);

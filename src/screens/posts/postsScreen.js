@@ -3,6 +3,7 @@ import { Text, View, TextInput } from "react-native";
 import styles from "./styles";
 import { connect } from "react-redux";
 import { Header, Left, Right } from "native-base";
+import { BackHandler } from "react-native";
 import {
   Card,
   ListItem,
@@ -30,10 +31,8 @@ const mapDispatchToProps = dispatch => {
   return {
     getMyPosts: () => dispatch(getPostsByUserIdAction()),
     getAllPosts: () => dispatch(getAllPostsAction()),
-    addPost: () => dispatch(addNewPostAction()),
-    deletePost: () => dispatch(deletePostByIdAction()),
-
-    dispatch
+    addPost: (title, image_url) => dispatch(addNewPostAction(title, image_url)),
+    deletePost: postId => dispatch(deletePostByIdAction(postId))
   };
 };
 class PostsScreen extends Component {
@@ -44,10 +43,23 @@ class PostsScreen extends Component {
       newPostTitle: "",
       newPostImageUrl: ""
     };
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.updateIndex = this.updateIndex.bind(this);
     this.addNewPost = this.addNewPost.bind(this);
     this.deletePostById = this.deletePostById.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
+  }
+
+  componentWillMount() {
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
+
+  handleBackButtonClick() {
+    this.props.navigation.navigate("Login");
+    return true;
   }
 
   async addNewPost() {

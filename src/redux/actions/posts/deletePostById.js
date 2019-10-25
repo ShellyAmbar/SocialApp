@@ -6,13 +6,13 @@ import { AsyncStorage } from "react-native";
 export default DeletePost = post_id => {
   return async dispatch => {
     const token = await AsyncStorage.getItem("token");
-    fetch(postsRoutes.delete_post_by_id + "/${post_id}", {
+    fetch(postsRoutes.delete_post_by_id + `/${post_id}`, {
       method: "POST",
 
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer  ${token}`
       }
     })
       .then(respond => {

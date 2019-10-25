@@ -6,7 +6,8 @@ import {
   Image,
   TextInput,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import styles from "./styles";
 import logo from "../../../assets/images/logo.png";
@@ -31,9 +32,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    login: () => dispatch(loginAction()),
-
-    dispatch
+    login: (email, password) => dispatch(loginAction(email, password))
   };
 };
 
@@ -48,6 +47,8 @@ class LoginScreen extends Component {
     this.retrieveData = this.retrieveData.bind(this);
 
     this.state = {
+      isSubmit: false,
+      isShowAlert: true,
       token: "",
       user_id: "",
       email: "",
@@ -89,6 +90,9 @@ class LoginScreen extends Component {
         .includes("@")
     ) {
       if (String(password).toString().length >= 4) {
+        this.setState({
+          isSubmit: true
+        });
         try {
           await this.props.login(email, password);
         } catch (err) {
@@ -145,6 +149,40 @@ class LoginScreen extends Component {
   async componentDidMount() {
     await this.retrieveData();
   }
+
+  goToDashboard = () => {
+    this.props.navigation.navigate("Dashboard");
+  };
+
+  openAlertEnter = () => {
+    Alert.alert(
+      "Hello, you are currently logged in.",
+      "Would you like to enter? or sign in with another account?",
+      [
+        {
+          text: "Enter my Dashboard",
+          onPress: () => {
+            console.log("Entered my Dashboard");
+            this.goToDashboard();
+            this.setState({
+              isShowAlert: false
+            });
+          }
+        },
+        {
+          text: "Ener with another account.",
+          onPress: () => {
+            console.log("OK Pressed");
+            this.setState({
+              isShowAlert: false
+            });
+          }
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
   render() {
     {
       <Overlay
@@ -158,8 +196,14 @@ class LoginScreen extends Component {
       </Overlay>;
       //if user is allready logged in
 
-      if (this.state.token != "" && this.state.user_id != "") {
-        this.props.navigation.navigate("Dashboard");
+      if (
+        this.state.token !== "" &&
+        this.state.token === this.props.token &&
+        this.state.isShowAlert
+      ) {
+        this.openAlertEnter();
+      } else if (this.props.token !== "" && this.state.isSubmit) {
+        this.goToDashboard();
       }
     }
     return (

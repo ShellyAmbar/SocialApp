@@ -2,14 +2,14 @@ import axios from "axios";
 import { followersRoutes } from "../../routes";
 import types from "../actionsTypes";
 import { AsyncStorage } from "react-native";
-export default GetMyFollowers = data => {
+export default GetMyFollowers = () => {
   return async dispatch => {
     const token = await AsyncStorage.getItem("token");
     fetch(followersRoutes.get_my_followers, {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer ${token}`
       }
     })
       .then(response => {

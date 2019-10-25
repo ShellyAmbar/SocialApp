@@ -15,9 +15,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getFollows: () => dispatch(getFollowersByUserIdAction()),
-
-    dispatch
+    getFollows: () => dispatch(getFollowersByUserIdAction())
   };
 };
 
@@ -34,14 +32,14 @@ class FollowsScreen extends Component {
   }
 
   render() {
-    const followsArray = this.props.followersById;
+    const { followersById } = this.props;
     {
       return (
         <View style={{ flex: 1 }}>
-          {Array(followsArray).length != 0 && this.props.errorMassage == "" && (
+          {followersById.length > 0 && this.props.errorMassage == "" && (
             <Card containerStyle={{ padding: 0 }}>
-              {followsArray.map((u, i) => {
-                return <ListItem key={i} roundAvatar title={u.name} />;
+              {followersById.map((u, i) => {
+                return <ListItem key={i} roundAvatar title={u.user_id} />;
               })}
             </Card>
           )}

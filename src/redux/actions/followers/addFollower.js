@@ -12,7 +12,7 @@ export default AddFollower = user_id => {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
         f_user_id: user_id

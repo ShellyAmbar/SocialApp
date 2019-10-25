@@ -32,9 +32,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    register: () => dispatch(registerAction()),
-
-    dispatch
+    register: (email, password) => dispatch(registerAction(email, password))
   };
 };
 class SignupScreen extends Component {
@@ -47,7 +45,6 @@ class SignupScreen extends Component {
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.storeData = this.storeData.bind(this);
     this.state = {
-      isOverlayVisible: false,
       shohPass: true,
       email: this.props.email != null ? this.props.email : "",
       password: this.props.password != null ? this.props.password : "",
@@ -57,8 +54,8 @@ class SignupScreen extends Component {
 
   async storeData(token, user_id) {
     try {
-      await AsyncStorage.setItem("token", token);
-      await AsyncStorage.setItem("user_id", user_id);
+      await AsyncStorage.setItem("token", token + "");
+      await AsyncStorage.setItem("user_id", user_id + "");
     } catch (error) {
       console.error(error);
     }
@@ -77,20 +74,6 @@ class SignupScreen extends Component {
           //register to api with redux
           console.log(email, " ", password);
           await this.props.register(email, password);
-
-          if (this.props.errorMassage != "") {
-            this.setState({ isOverlayVisible: true });
-            console.log(this.props.errorMassage + " ERROR REGISTER");
-          } else {
-            this.setState({ isOverlayVisible: false });
-
-            if (this.props.token != "" && this.props.user_id != "") {
-              //save data in app storage
-              await storeData(this.props.token, this.props.user_id);
-              console.log("Successfully saved token and user-id");
-              this.props.navigation.navigate("Dashboard");
-            }
-          }
         } catch (err) {
           console.error(err);
         }
@@ -141,15 +124,31 @@ class SignupScreen extends Component {
   state = {};
 
   render() {
+    var isOverlayVisible = false;
+    if (this.props.errorMassage != "") {
+      isOverlayVisible = true;
+      console.log(this.props.errorMassage + " ERROR REGISTER");
+    } else {
+      isOverlayVisible = false;
+
+      if (this.props.token != "" && this.props.user_id != "") {
+        console.log("entered in success");
+        //save data in app storage
+        this.storeData(this.props.token, this.props.user_id);
+        console.log("Successfully saved token and user-id");
+        this.props.navigation.navigate("Dashboard");
+      }
+    }
     return (
       <View style={styles.container}>
         <Overlay
-          isVisible={this.state.isOverlayVisible}
+          isVisible={isOverlayVisible}
           windowBackgroundColor="rgba(255, 255, 255, .5)"
           overlayBackgroundColor="red"
           width="auto"
           height="auto"
-          onBackdropPress={() => this.setState({ isOverlayVisible: false })}
+          onRequestClose={() => (isOverlayVisible = false)}
+          onBackdropPress={() => (isOverlayVisible = false)}
         >
           <Text>{this.props.errorMassage}</Text>
         </Overlay>

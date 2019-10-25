@@ -12,7 +12,7 @@ export default Login = (email, password) => {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
         email: email,
@@ -32,8 +32,6 @@ export default Login = (email, password) => {
           type: types.login,
           payload: respond.data
         });
-        localStorage.setItem("TOKEN", respond.data.token);
-        localStorage.setItem("USER_ID", respond.data.user_id);
       })
       .catch(err => {
         console.log(err);
