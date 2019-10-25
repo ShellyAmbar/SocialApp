@@ -6,6 +6,7 @@ import { View, Text, Image } from "react-native";
 import { Card, ListItem, Button, Icon } from "react-native-elements";
 import { getFollowersByUserIdAction } from "../../redux/actions/followers";
 import { connect } from "react-redux";
+import { AsyncStorage } from "react-native";
 
 const mapStateToProps = state => {
   return {
@@ -15,7 +16,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getFollows: () => dispatch(getFollowersByUserIdAction())
+    getFollows: token => dispatch(getFollowersByUserIdAction(token))
   };
 };
 
@@ -25,7 +26,8 @@ class FollowsScreen extends Component {
   }
   async componentDidMount() {
     try {
-      await this.props.getFollows();
+      const token = await AsyncStorage.getItem("token");
+      await this.props.getFollows(token);
     } catch (err) {
       console.error(err);
     }

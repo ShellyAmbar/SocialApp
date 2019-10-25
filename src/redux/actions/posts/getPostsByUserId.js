@@ -3,17 +3,17 @@ import types from "../actionsTypes";
 import { postsRoutes } from "../../routes";
 import { AsyncStorage } from "react-native";
 
-export default GetPostsByUserId = () => {
+export default GetPostsByUserId = token => {
   return async dispatch => {
-    const token = await AsyncStorage.getItem("token");
     fetch(postsRoutes.get_posts_by_user_id, {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer  ${token}`
+        Authorization: `Bearer ${token}`
       }
     })
       .then(response => {
+        console.log(postsRoutes.get_posts_by_user_id, ",", token);
         if (response.status === 200 && response.ok === true) {
           return response.json();
         } else {

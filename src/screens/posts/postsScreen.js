@@ -4,6 +4,7 @@ import styles from "./styles";
 import { connect } from "react-redux";
 import { Header, Left, Right } from "native-base";
 import { BackHandler } from "react-native";
+import { AsyncStorage } from "react-native";
 import {
   Card,
   ListItem,
@@ -29,16 +30,18 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getMyPosts: () => dispatch(getPostsByUserIdAction()),
-    getAllPosts: () => dispatch(getAllPostsAction()),
-    addPost: (title, image_url) => dispatch(addNewPostAction(title, image_url)),
-    deletePost: postId => dispatch(deletePostByIdAction(postId))
+    getMyPosts: token => dispatch(getPostsByUserIdAction(token)),
+    getAllPosts: token => dispatch(getAllPostsAction(token)),
+    addPost: (title, image_url, token) =>
+      dispatch(addNewPostAction(title, image_url, token)),
+    deletePost: (postId, token) => dispatch(deletePostByIdAction(postId, token))
   };
 };
 class PostsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      token: "",
       selectedIndex: 0,
       newPostTitle: "",
       newPostImageUrl: ""
@@ -57,6 +60,13 @@ class PostsScreen extends Component {
     );
   }
 
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBackButtonClick
+    );
+  }
+
   handleBackButtonClick() {
     this.props.navigation.navigate("Login");
     return true;
@@ -65,12 +75,13 @@ class PostsScreen extends Component {
   async addNewPost() {
     await this.props.addPost(
       this.state.newPostName,
-      this.state.newPostImageUrl
+      this.state.newPostImageUrl,
+      this.state.token
     );
   }
 
   async deletePostById(post_id) {
-    await this.props.deletePost(post_id);
+    await this.props.deletePost(post_id, this.state.token);
   }
 
   onChangeTitle(value) {
@@ -80,8 +91,12 @@ class PostsScreen extends Component {
   }
 
   async componentDidMount() {
-    await this.props.getAllPosts();
-    await this.props.getMyPosts();
+    const token = await AsyncStorage.getItem("token");
+    this.setState({
+      token: token
+    });
+    await this.props.getAllPosts(token);
+    await this.props.getMyPosts(token);
   }
 
   updateIndex(selectedIndex) {
@@ -92,8 +107,8 @@ class PostsScreen extends Component {
   render() {
     const buttons = ["My Posts", "All Posts", "Add Post"];
     const { selectedIndex } = this.state;
-    const allPostsArray = this.props.allPosts;
-    const myPostsArray = this.props.postsByUserId;
+    const { allPosts, postsByUserId } = this.props;
+
     return (
       <View style={{ flex: 1 }}>
         <View>
@@ -108,8 +123,8 @@ class PostsScreen extends Component {
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           {selectedIndex == 0 &&
-            Array(myPostsArray).length != 0 &&
-            myPostsArray.map((u, i) => {
+            postsByUserId.length > 0 &&
+            postsByUserId.map((u, i) => {
               <View key={i}>
                 <Card title={u.title} containerStyle={{ borderRadius: 20 }}>
                   <Text style={{ marginBottom: 10 }}>post detailes</Text>
@@ -117,8 +132,8 @@ class PostsScreen extends Component {
               </View>;
             })}
           {selectedIndex == 1 &&
-            Array(allPostsArray).length != 0 &&
-            allPostsArray.map((u, i) => {
+            allPosts.length > 0 &&
+            allPosts.map((u, i) => {
               <View key={i}>
                 <Card title={u.title} containerStyle={{ borderRadius: 20 }}>
                   <Text style={{ marginBottom: 10 }}>post detailes</Text>

@@ -3,18 +3,17 @@ import { postsRoutes } from "../../routes";
 import types from "../actionsTypes";
 import { AsyncStorage } from "react-native";
 
-export default GetAllPosts = () => {
+export default GetAllPosts = token => {
   return async dispatch => {
-    const token = await AsyncStorage.getItem("token");
     fetch(postsRoutes.get_all_posts, {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer  ${token}`
+        Authorization: `Bearer ${token}`
       }
     })
       .then(response => {
-        console.log(response);
+        console.log(postsRoutes.get_all_posts, ",", token);
         if (response.status === 200 && response.ok === true) {
           return response.json();
         } else {
@@ -22,7 +21,7 @@ export default GetAllPosts = () => {
         }
       })
       .then(response => {
-        console.log(response.data);
+        console.log(response);
         dispatch({
           type: types.get_all_posts,
           payload: response.data

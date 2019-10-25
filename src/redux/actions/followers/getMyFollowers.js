@@ -2,9 +2,8 @@ import axios from "axios";
 import { followersRoutes } from "../../routes";
 import types from "../actionsTypes";
 import { AsyncStorage } from "react-native";
-export default GetMyFollowers = () => {
+export default GetMyFollowers = token => {
   return async dispatch => {
-    const token = await AsyncStorage.getItem("token");
     fetch(followersRoutes.get_my_followers, {
       method: "GET",
       headers: {

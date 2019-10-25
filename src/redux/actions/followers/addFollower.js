@@ -3,9 +3,8 @@ import { followersRoutes } from "../../routes";
 import types from "../actionsTypes";
 import { AsyncStorage } from "react-native";
 
-export default AddFollower = user_id => {
+export default AddFollower = (user_id, token) => {
   return async dispatch => {
-    const token = await AsyncStorage.getItem("token");
     fetch(followersRoutes.add_follower, {
       method: "POST",
 

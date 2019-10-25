@@ -2,9 +2,8 @@ import axios from "axios";
 import types from "../actionsTypes";
 import { postsRoutes } from "../../routes";
 import { AsyncStorage } from "react-native";
-export default AddNewPost = (title, image_url) => {
+export default AddNewPost = (title, image_url, token) => {
   return async dispatch => {
-    const token = await AsyncStorage.getItem("token");
     fetch(postsRoutes.add_post, {
       method: "POST",
 

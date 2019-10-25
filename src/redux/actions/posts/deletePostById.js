@@ -3,9 +3,8 @@ import { postsRoutes } from "../../routes";
 import types from "../actionsTypes";
 import { AsyncStorage } from "react-native";
 
-export default DeletePost = post_id => {
+export default DeletePost = (post_id, token) => {
   return async dispatch => {
-    const token = await AsyncStorage.getItem("token");
     fetch(postsRoutes.delete_post_by_id + `/${post_id}`, {
       method: "POST",
 

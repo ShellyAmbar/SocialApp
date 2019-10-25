@@ -5,6 +5,7 @@ import { Header, Left, Right } from "native-base";
 
 import { View, Text, Image } from "react-native";
 import { Card, ListItem, Button, Icon } from "react-native-elements";
+import { AsyncStorage } from "react-native";
 import {
   getMyFollowersAction,
   addFollowerAction
@@ -20,19 +21,26 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getFollowers: () => dispatch(getMyFollowersAction()),
-    addFollow: user_id => dispatch(addFollowerAction(user_id))
+    getFollowers: token => dispatch(getMyFollowersAction(token)),
+    addFollow: (user_id, token) => dispatch(addFollowerAction(user_id, token))
   };
 };
 
 class FollowersScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      token: ""
+    };
   }
 
   async componentDidMount() {
     try {
-      await this.props.getFollowers();
+      const token = await AsyncStorage.getItem("token");
+      this.setState({
+        token: token
+      });
+      await this.props.getFollowers(token);
     } catch (err) {
       console.error(err);
     }

@@ -3,10 +3,8 @@ import { followersRoutes } from "../../routes";
 import types from "../actionsTypes";
 import { AsyncStorage } from "react-native";
 
-export default GetFollowersByUserId = () => {
+export default GetFollowersByUserId = token => {
   return async dispatch => {
-    const token = await AsyncStorage.getItem("token");
-
     fetch(followersRoutes.get_followers_by_user_id, {
       method: "GET",
       headers: {

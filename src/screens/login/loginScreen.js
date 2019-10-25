@@ -32,7 +32,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    login: (email, password) => dispatch(loginAction(email, password))
+    login: (email, password, token) =>
+      dispatch(loginAction(email, password, token))
   };
 };
 
@@ -94,7 +95,7 @@ class LoginScreen extends Component {
           isSubmit: true
         });
         try {
-          await this.props.login(email, password);
+          await this.props.login(email, password, this.state.token);
         } catch (err) {
           console.error(err);
         }
@@ -197,8 +198,8 @@ class LoginScreen extends Component {
       //if user is allready logged in
 
       if (
+        this.props.token === this.state.token &&
         this.state.token !== "" &&
-        this.state.token === this.props.token &&
         this.state.isShowAlert
       ) {
         this.openAlertEnter();

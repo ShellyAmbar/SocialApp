@@ -3,9 +3,8 @@ import { authRutes } from "../../routes";
 import types from "../actionsTypes";
 import { AsyncStorage } from "react-native";
 
-export default Login = (email, password) => {
+export default Login = (email, password, token) => {
   return async dispatch => {
-    const token = await AsyncStorage.getItem("token");
     fetch(authRutes.login_user, {
       method: "POST",
 
