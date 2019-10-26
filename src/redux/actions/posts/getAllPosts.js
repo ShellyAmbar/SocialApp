@@ -13,7 +13,7 @@ export default GetAllPosts = token => {
       }
     })
       .then(response => {
-        console.log(postsRoutes.get_all_posts, ",", token);
+        console.log(postsRoutes.get_all_posts, ",", token, response);
         if (response.status === 200 && response.ok === true) {
           return response.json();
         } else {

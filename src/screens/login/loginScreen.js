@@ -22,6 +22,7 @@ import { loginAction } from "../../redux/actions/auth";
 import userData from "../../../constants/user_data";
 import { Overlay } from "react-native-elements";
 import { AsyncStorage } from "react-native";
+import register from "../../../constants/register";
 
 const mapStateToProps = state => {
   return {
@@ -46,9 +47,8 @@ class LoginScreen extends Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.onDashboard = this.onDashboard.bind(this);
     this.retrieveData = this.retrieveData.bind(this);
-
+    register.isSubmit = false;
     this.state = {
-      isSubmit: false,
       isShowAlert: true,
       token: "",
       user_id: "",
@@ -91,10 +91,8 @@ class LoginScreen extends Component {
         .includes("@")
     ) {
       if (String(password).toString().length >= 4) {
-        this.setState({
-          isSubmit: true
-        });
         try {
+          register.isSubmit = true;
           await this.props.login(email, password, this.state.token);
         } catch (err) {
           console.error(err);
@@ -149,6 +147,13 @@ class LoginScreen extends Component {
   }
   async componentDidMount() {
     await this.retrieveData();
+
+    if (this.state.token !== "" && this.state.isShowAlert) {
+      this.openAlertEnter();
+      this.setState({
+        isShowAlert: false
+      });
+    }
   }
 
   goToDashboard = () => {
@@ -158,30 +163,36 @@ class LoginScreen extends Component {
   openAlertEnter = () => {
     Alert.alert(
       "Hello, you are currently logged in.",
-      "Would you like to enter? or sign in with another account?",
+      "Would you like to enter? ",
       [
         {
           text: "Enter my Dashboard",
           onPress: () => {
-            console.log("Entered my Dashboard");
-            this.goToDashboard();
-            this.setState({
-              isShowAlert: false
-            });
+            this.onAlertClose("ok");
           }
         },
         {
           text: "Ener with another account.",
           onPress: () => {
-            console.log("OK Pressed");
-            this.setState({
-              isShowAlert: false
-            });
+            this.onAlertClose("cancel");
           }
         }
       ],
       { cancelable: false }
     );
+  };
+
+  onAlertClose = value => {
+    switch (value) {
+      case "ok":
+        console.log("Entered my Dashboard.");
+        this.goToDashboard();
+        break;
+
+      case "close":
+        console.log("Entere with another account.");
+        break;
+    }
   };
 
   render() {
@@ -196,15 +207,10 @@ class LoginScreen extends Component {
         <Text>{this.props.errorMassage}</Text>
       </Overlay>;
       //if user is allready logged in
-
-      if (
-        this.props.token === this.state.token &&
-        this.state.token !== "" &&
-        this.state.isShowAlert
-      ) {
-        this.openAlertEnter();
-      } else if (this.props.token !== "" && this.state.isSubmit) {
-        this.goToDashboard();
+      {
+        if (this.props.token !== "" && register.isSubmit) {
+          this.goToDashboard();
+        }
       }
     }
     return (

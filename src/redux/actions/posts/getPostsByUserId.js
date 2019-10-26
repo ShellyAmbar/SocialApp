@@ -7,13 +7,21 @@ export default GetPostsByUserId = token => {
   return async dispatch => {
     fetch(postsRoutes.get_posts_by_user_id, {
       method: "GET",
-      headers: {
+      headers: new Headers({
         accept: "application/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
-      }
+      })
     })
       .then(response => {
-        console.log(postsRoutes.get_posts_by_user_id, ",", token);
+        console.log(
+          postsRoutes.get_posts_by_user_id,
+          ",",
+          token,
+          ",",
+          response
+        );
+
         if (response.status === 200 && response.ok === true) {
           return response.json();
         } else {
